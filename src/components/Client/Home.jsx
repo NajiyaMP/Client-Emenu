@@ -41,7 +41,7 @@ const Home = () => {
                                 <div className="col-12">
                                     <div className="slider_content">
                                         <p>exclusive offer -20% off this week</p>
-                                        <h1>Necklace</h1>
+                                        <h1>Necklaces</h1>
                                         <span>22 Carat gold necklace for wedding</span>
                                         <p className="slider_price">starting at <span>AED. 75,999</span></p>
                                             <Link  to={'/collections'} className="button"><b>Shop Now</b></Link>
