@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './Nav';
+import Maincategory from './Maincategory';
 
 function Products() {
     const backendUrl = process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL;
     const [dishes, setDishes] = useState([]);
     const [search, setSearch] = useState('');
     const [categories, setCategories] = useState([]);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
 
     const navigate = useNavigate();
 
@@ -41,13 +45,16 @@ function Products() {
     }, [search, backendUrl]);
 
     const redirectToWhatsApp = (order) => {
-        const phoneNumber = '+971585023411'; 
-        const message = `Hi, I'd like to order ${order.dishes} for ₹${order.price}`;
+        const phoneNumber = '+971585023411';
+        const imageUrl = `${process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL}/images/${order.image[currentImageIndex]}`;
+        const message = `Hi, I'd like to order  ${order.dishes} for AED ${order.price}.`;
         const encodedMessage = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
         window.open(whatsappUrl, '_blank');
-    };
+      };
+    
 
+    
     const handleImageError = (e) => {
         e.target.onerror = null; // Prevents infinite loop
         e.target.src = 'path/to/default-image.jpg'; // Ensure this path is correct
@@ -55,7 +62,9 @@ function Products() {
 
     return (
         <div className='bg-dark'>
+           
             <div className="container-fluid banner-2">
+               
                 <div className="row">
                     <div className="col-12"></div>
                 </div>
@@ -63,7 +72,7 @@ function Products() {
 
             <div className="container">
                 <div className="row">
-                    <h1 style={{color:'white'}}>Collections</h1>
+                    <h1 style={{color:'white',display:'flex',justifyContent:'center',alignItems:'center',fontFamily:'slick' }}>Collections</h1>
                     {dishes.length === 0 ? (
                         <p style={{color: 'white'}}>No dishes found.</p>
                     ) : (

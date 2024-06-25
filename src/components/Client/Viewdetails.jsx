@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Row, Col, Button } from 'react-bootstrap';
 import Maincategory from './Maincategory';
+import Navbar from './Nav';
 
 const ViewDetails = () => {
   const location = useLocation();
@@ -28,7 +29,7 @@ const ViewDetails = () => {
   const redirectToWhatsApp = (order) => {
     const phoneNumber = '+971585023411';
     const imageUrl = `${process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL}/images/${order.image[currentImageIndex]}`;
-    const message = `Hi, I'd like to order ${imageUrl} ${order.dishes} for AED ${order.price}.`;
+    const message = `Hi, I'd like to order  ${order.dishes} for AED ${order.price}.`;
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
@@ -36,6 +37,7 @@ const ViewDetails = () => {
 
   return (
     <div className='container-dark'>
+      <Navbar/>
       <Maincategory/>
       <div className="container mt-5">
         <Row>

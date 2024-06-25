@@ -5,6 +5,7 @@ import icon from './images/icon/icon_phone.png';
 import logo from './images/logo/bgg.png';
 import navp from './images/nav-product/product.jpg';
 import p2 from './images/nav-product/product2.jpg';
+import { Link } from 'react-router-dom';
 
 
 const Navbar = () => {
@@ -175,19 +176,32 @@ const Navbar = () => {
                                 <div className="main_menu">
                                     <nav>
                                         <ul>
-                                            <li className="active">
-                                                <a href="/">Home <i className="ion-chevron-down"></i></a>
-                                                {/* <ul className="sub_menu">
+                                            {/* <li className="active">
+                                                <Link href="/">Home <i className="ion-chevron-down"></i></Link>
+                                                <ul className="sub_menu">
                                                     <li><a href="#">Banner</a></li>
                                                     <li><a href="#">Featured</a></li>
                                                     <li><a href="#">Collection</a></li>
                                                     <li><a href="#">Best Selling</a></li>
                                                     <li><a href="#">News</a></li>
                                                     <li><a href="#">Blog</a></li>
-                                                </ul> */}
+                                                </ul> 
+                                            </li>  */}
+                                            <li className="active">
+                                                <Link  to={'/'}> <li><b>Home</b></li></Link>
+
                                             </li>
-                                            <li><a href="/aboutus">About Us</a></li>
-                                            <li><a href="/products">Collection</a></li>
+                                            <li className="active">
+                                                <Link  to={'/aboutus'}> <li  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}><b>About us</b></li></Link>
+
+                                            </li>
+                                            <li className="active">
+                                                <Link  to={'/collections'}> <li  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}><b>Collections</b></li></Link>
+
+                                            </li>
+                                           
+
+                                            
                                             {/* <li><a href="/products"></a>Collecion</li> */}
 
                                             {/* <li>

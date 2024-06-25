@@ -6,12 +6,12 @@ import Navbar from './Nav';
 import Products from './Products';
 import Footer from './Footer';
 import Gift from './Gift';
-
-
 import banner1 from './images/banner/bg-1.jpg';
 import banner2 from './images/banner/bg-2.jpg';
 import banner3 from './images/banner/bg-3.jpg';
 import Maincategory from './Maincategory';
+import { Link } from 'react-router-dom';
+
 
 
 
@@ -43,8 +43,10 @@ const Home = () => {
                                         <p>exclusive offer -20% off this week</p>
                                         <h1>Necklace</h1>
                                         <span>22 Carat gold necklace for wedding</span>
-                                        <p className="slider_price">starting at <span>Rs. 75,999</span></p>
-                                        <a href="/products" className="button">Shop Now</a>
+                                        <p className="slider_price">starting at <span>AED. 75,999</span></p>
+                                            <Link  to={'/collections'} className="button"><b>Shop Now</b></Link>
+
+                                        {/* <a href="/products" className="button"></a> */}
                                     </div>
                                 </div>
                             </div>
@@ -58,8 +60,9 @@ const Home = () => {
                                         <p>exclusive offer -40% off this week</p>
                                         <h1>Earings and Pendant</h1>
                                         <span>Complete bridal set with white pearls</span>
-                                        <p className="slider_price">starting at <span>Rs. 89,499</span></p>
-                                        <a href="#" className="button">Shop Now</a>
+                                        <p className="slider_price">starting at <span>AED. 89,499</span></p>
+                                        <Link  to={'/collections'} className="button"><b>Shop Now</b></Link>
+
                                     </div>
                                 </div>
                             </div>
@@ -73,8 +76,9 @@ const Home = () => {
                                         <p>exclusive offer -10% off this week</p>
                                         <h1>Wedding Rings</h1>
                                         <span>Ashirwaad Special wedding rings for couples.</span>
-                                        <p className="slider_price">starting at <span>Rs. 14,999</span></p>
-                                        <a href="#" className="button">Shop Now</a>
+                                        <p className="slider_price">starting at <span>AED. 14,999</span></p>
+                                        <Link  to={'/collections'} className='button'> <b>Shop Now</b></Link>
+
                                     </div>
                                 </div>
                             </div>

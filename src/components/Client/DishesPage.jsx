@@ -3,11 +3,15 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardBody, CardFooter, CardHeader} from 'react-bootstrap';
+import Navbar from './Nav';
+import Maincategory from './Maincategory'
 
 
 const DishesPage = () => {
     const backendUrl = process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL;
     const [dishes, setDishes] = useState([]);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const categoryId = searchParams.get('category');
@@ -34,19 +38,24 @@ const DishesPage = () => {
 
         fetchDishes();
     }, [backendUrl, categoryId]);
-      const redirectToWhatsApp = (order) => {
-        const phoneNumber = '+971585023411'; 
-        const message = `Hi, I'd like to order ${order.dishes} for ₹${order.price}`;
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-        window.open(whatsappUrl, '_blank');
+
+    const redirectToWhatsApp = (order) => {
+      const phoneNumber = '+971585023411';
+      const imageUrl = `${process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL}/images/${order.image[currentImageIndex]}`;
+      const message = `Hi, I'd like to order  ${order.dishes} for AED ${order.price}.`;
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+      window.open(whatsappUrl, '_blank');
     };
+  
 
     return (
         <div>
-           <div>
+          <Navbar/>
+          <Maincategory/>
+           <div className='container-fluid bg-dark'>
               {dishes.map((dish) => (
-                <div key={dish._id} className="col-12 col-lg-3 mb-4">
+                <div key={dish._id} className="col-12 col-lg-3 mb-4 d-flex">
                   <Card>
                     <CardBody className="row g-0">
                       <CardHeader>

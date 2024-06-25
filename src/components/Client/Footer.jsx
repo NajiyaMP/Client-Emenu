@@ -30,7 +30,7 @@ function Footer() {
                         <ul style={{listStyle:'none'}}>
                            <Link style={{textDecoration:'none'}} to={'/'}> <li style={{color:'#cba73b'}} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}><b>Home</b></li></Link>
                            <Link style={{textDecoration:'none'}} to={'/aboutus'}> <li style={{color:'#cba73b'}} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}><b>About us</b></li></Link>
-                           <Link style={{textDecoration:'none'}} to={'/products'}> <li style={{color:'#cba73b'}} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}><b>Products</b></li></Link>
+                           <Link style={{textDecoration:'none'}} to={'/collections'}> <li style={{color:'#cba73b'}} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}><b>Collections</b></li></Link>
                             
                         </ul>
                        </div>
