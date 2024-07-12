@@ -1,12 +1,13 @@
-// Modified CategoriesMenu component
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Preloader from './Preloader'; // Import the Preloader component
 
 const CategoriesMenu = () => {
     const backendUrl = process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL;
     const [mainCategories, setMainCategories] = useState([]);
     const [subCategories, setSubCategories] = useState({});
+    const [loading, setLoading] = useState(true); // Add loading state
 
     useEffect(() => {
         const fetchMainCategories = async () => {
@@ -34,8 +35,10 @@ const CategoriesMenu = () => {
 
                 setMainCategories(mainCategoriesData);
                 setSubCategories(subCategoriesData);
+                setLoading(false); // Set loading to false once data is fetched
             } catch (error) {
                 console.error('Error fetching categories:', error);
+                setLoading(false); // Set loading to false even if there's an error
             }
         };
 
@@ -44,27 +47,107 @@ const CategoriesMenu = () => {
 
     return (
         <div className="main_menu" style={{ backgroundColor: '#2d2d2d' }}>
-            <nav>
-                <ul style={{ marginBottom: "0" }}>
-                    {mainCategories.map(mainCat => (
-                        <li key={mainCat._id} className="active">
-                            <a href="#">{mainCat.maincategories} <i className="ion-chevron-down"></i></a>
-                            <ul className="mega_menu">
-                                {subCategories[mainCat._id] &&
-                                    subCategories[mainCat._id].map(subCat => (
-                                        <li key={subCat._id}>
-                                            <Link to={`/dishes?category=${subCat._id}`}>{subCat.name}</Link>                                        </li>
-                                    ))}
-                            </ul>
-                        </li>
-                    ))}
-                </ul>
-            </nav>
+            {loading ? ( // Show Preloader while loading
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '300px' }}>
+                    <Preloader />
+                </div>
+            ) : (
+                <nav>
+                    <ul style={{ marginBottom: "0" }}>
+                        {mainCategories.map(mainCat => (
+                            <li key={mainCat._id} className="active">
+                                <a href="#" style={{ textDecoration: 'none' }}>
+                                    {mainCat.maincategories} <i className="ion-chevron-down"></i>
+                                </a>
+                                <ul className="mega_menu">
+                                    {subCategories[mainCat._id] &&
+                                        subCategories[mainCat._id].map(subCat => (
+                                            <li key={subCat._id}>
+                                                <Link to={`/dishes?category=${subCat._id}`} style={{ textDecoration: 'none' }}>
+                                                    {subCat.name}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                </ul>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+            )}
         </div>
     );
 };
 
 export default CategoriesMenu;
+
+
+// // Modified CategoriesMenu component
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+// import { Link } from 'react-router-dom';
+
+// const CategoriesMenu = () => {
+//     const backendUrl = process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL;
+//     const [mainCategories, setMainCategories] = useState([]);
+//     const [subCategories, setSubCategories] = useState({});
+
+//     useEffect(() => {
+//         const fetchMainCategories = async () => {
+//             try {
+//                 const response = await axios.get(`${backendUrl}/admin/getcategories`);
+//                 const categoriesData = response.data;
+
+//                 const categoriesMap = {};
+//                 categoriesData.forEach(category => {
+//                     const mainCategoryId = category.maincategoriesData._id;
+//                     if (!categoriesMap[mainCategoryId]) {
+//                         categoriesMap[mainCategoryId] = {
+//                             mainCategory: category.maincategoriesData,
+//                             subcategories: []
+//                         };
+//                     }
+//                     categoriesMap[mainCategoryId].subcategories.push(category);
+//                 });
+
+//                 const mainCategoriesData = Object.values(categoriesMap).map(item => item.mainCategory);
+//                 const subCategoriesData = {};
+//                 Object.keys(categoriesMap).forEach(mainCategoryId => {
+//                     subCategoriesData[mainCategoryId] = categoriesMap[mainCategoryId].subcategories;
+//                 });
+
+//                 setMainCategories(mainCategoriesData);
+//                 setSubCategories(subCategoriesData);
+//             } catch (error) {
+//                 console.error('Error fetching categories:', error);
+//             }
+//         };
+
+//         fetchMainCategories();
+//     }, [backendUrl]);
+
+//     return (
+//         <div className="main_menu" style={{ backgroundColor: '#2d2d2d' }}>
+//             <nav>
+//                 <ul style={{ marginBottom: "0" }}>
+//                     {mainCategories.map(mainCat => (
+//                         <li key={mainCat._id} className="active">
+//                             <a href="#" style={{textDecoration:'none'}}>{mainCat.maincategories} <i className="ion-chevron-down"></i></a>
+//                             <ul className="mega_menu">
+//                                 {subCategories[mainCat._id] &&
+//                                     subCategories[mainCat._id].map(subCat => (
+//                                         <li key={subCat._id}>
+//                                             <Link to={`/dishes?category=${subCat._id}`} style={{textDecoration:'none'}}>{subCat.name}</Link>                                        </li>
+//                                     ))}
+//                             </ul>
+//                         </li>
+//                     ))}
+//                 </ul>
+//             </nav>
+//         </div>
+//     );
+// };
+
+// export default CategoriesMenu;
 
 
 

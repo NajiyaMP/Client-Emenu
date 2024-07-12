@@ -9,8 +9,11 @@ import Gift from './Gift';
 import banner1 from './images/banner/bg-1.jpg';
 import banner2 from './images/banner/bg-2.jpg';
 import banner3 from './images/banner/bg-3.jpg';
+// import pic1 from './images/banner/at-gdwo.jpg';
+// import pic2 from './images/banner/goldexchange.jpg';
 import Maincategory from './Maincategory';
 import { Link } from 'react-router-dom';
+import {Row,Col} from "react-bootstrap";
 
 
 
@@ -44,7 +47,7 @@ const Home = () => {
                                         <h1>Necklaces</h1>
                                         <span>22 Carat gold necklace for wedding</span>
                                         <p className="slider_price">starting at <span>AED. 75,999</span></p>
-                                            <Link  to={'/collections'} className="button"><b>Shop Now</b></Link>
+                                            <Link  to={'/collections'} className="button" style={{textDecoration:'none'}}><b>Shop Now</b></Link>
 
                                         {/* <a href="/products" className="button"></a> */}
                                     </div>
@@ -61,7 +64,7 @@ const Home = () => {
                                         <h1>Earings and Pendant</h1>
                                         <span>Complete bridal set with white pearls</span>
                                         <p className="slider_price">starting at <span>AED. 89,499</span></p>
-                                        <Link  to={'/collections'} className="button"><b>Shop Now</b></Link>
+                                        <Link  to={'/collections'} className="button" style={{textDecoration:'none'}}><b>Shop Now</b></Link>
 
                                     </div>
                                 </div>
@@ -77,7 +80,7 @@ const Home = () => {
                                         <h1>Wedding Rings</h1>
                                         <span>Ashirwaad Special wedding rings for couples.</span>
                                         <p className="slider_price">starting at <span>AED. 14,999</span></p>
-                                        <Link  to={'/collections'} className='button'> <b>Shop Now</b></Link>
+                                        <Link  to={'/collections'} className='button' style={{textDecoration:'none'}}> <b>Shop Now</b></Link>
 
                                     </div>
                                 </div>
@@ -92,7 +95,7 @@ const Home = () => {
                         <div className="col-lg-4 col-md-6">
                             <div className="single_banner">
                                 <div className="banner_thumb">
-                                    <a href="#"><img src={banner1} alt="banner1"/></a>
+                                    <a href="#"><img src={banner1} className="image-animation-1" alt="banner1"/></a>
                                     <div className="banner_content">
                                         <p>New Design</p>
                                         <h2>Small design Rings</h2>
@@ -104,7 +107,7 @@ const Home = () => {
                         <div className="col-lg-4 col-md-6">
                             <div className="single_banner">
                                 <div className="banner_thumb">
-                                    <a href="#"><img src={banner2}  alt="banner2"/></a>
+                                    <a href="#"><img src={banner2}  className="image-animation-2" alt="banner2"/></a>
                                     <div className="banner_content">
                                         <p>Bestselling Rings</p>
                                         <h2>White gold rings</h2>
@@ -116,7 +119,7 @@ const Home = () => {
                         <div className="col-lg-4 col-md-6">
                             <div className="single_banner">
                                 <div className="banner_thumb">
-                                    <a href="#"><img src={banner3} alt="banner3"/></a>
+                                    <a href="#"><img src={banner3} className="image-animation-3" alt="banner3"/></a>
                                     <div className="banner_content">
                                         <p>Featured Rings</p>
                                         <h2>Platinium Rings</h2>
@@ -133,6 +136,18 @@ const Home = () => {
             </div>
             <div>
                 <Gift/>
+            </div>
+            <div style={{backgroundColor:'black'}}>
+                {/* <Row>
+                    <Col  md={6}>
+                        <img src={pic2} alt="img"/>
+                    </Col>
+                    <Col  md={6}>
+                        <img src={pic2} alt="img"/>
+
+                    </Col>
+
+                </Row> */}
             </div>
             <div>
                 <Footer/>

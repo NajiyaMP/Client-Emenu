@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Navbar from './Nav';
-import Maincategory from './Maincategory';
+import Preloader from './Preloader'; // Import the Preloader component
 
 function Products() {
     const backendUrl = process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL;
     const [dishes, setDishes] = useState([]);
     const [search, setSearch] = useState('');
     const [categories, setCategories] = useState([]);
+    const [loadingImages, setLoadingImages] = useState([]);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
 
     const navigate = useNavigate();
-
-    const handleClick = (item) => {
-        navigate('/view-details', { state: { item } });
-    };
 
     useEffect(() => {
         const fetchDishes = async () => {
@@ -24,6 +20,7 @@ function Products() {
                 const response = await axios.get(`${backendUrl}/admin/getdishes`, { params: { search } });
                 const data = response.data;
                 setDishes(data);
+                setLoadingImages(Array(data.length).fill(true));
                 console.log(data, "Fetched dishes");
             } catch (error) {
                 console.error('Error fetching dishes:', error);
@@ -35,8 +32,8 @@ function Products() {
                 const response = await axios.get(`${backendUrl}/admin/getcategories`);
                 const data = response.data;
                 setCategories(data);
-            } catch (err) {
-                console.error('Error fetching categories:', err);
+            } catch (error) {
+                console.error('Error fetching categories:', error);
             }
         };
 
@@ -44,61 +41,81 @@ function Products() {
         fetchDishes();
     }, [search, backendUrl]);
 
-    const redirectToWhatsApp = (order) => {
+    const handleClick = (item) => {
+        navigate('/view-details', { state: { item } });
+    };
+
+    const handleImageLoad = (index) => {
+        setLoadingImages((prev) => {
+            const newLoadingState = [...prev];
+            newLoadingState[index] = false;
+            return newLoadingState;
+        });
+    };
+
+    const handleImageError = (index) => {
+        setLoadingImages((prev) => {
+            const newLoadingState = [...prev];
+            newLoadingState[index] = false; // Remove preloader on error as well
+            return newLoadingState;
+        });
+    };
+
+
+    const redirectToWhatsApp = (dish) => {
         const phoneNumber = '+971585023411';
-        const imageUrl = `${process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL}/images/${order.image[currentImageIndex]}`;
-        const message = `Hi, I'd like to order  ${order.dishes} for AED ${order.price}.`;
+        const imageUrl = `${process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL}/images/${dish.image[currentImageIndex]}`;
+        const message = `Hi, I'd like to dish ${imageUrl} ${dish.dishes} for AED ${dish.price}.`;
         const encodedMessage = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
         window.open(whatsappUrl, '_blank');
       };
-    
-
-    
-    const handleImageError = (e) => {
-        e.target.onerror = null; // Prevents infinite loop
-        e.target.src = 'path/to/default-image.jpg'; // Ensure this path is correct
-    };
-
     return (
         <div className='bg-dark'>
-           
             <div className="container-fluid banner-2">
-               
                 <div className="row">
-                    <div className="col-12"></div>
+                    <div>
+                        <h1 style={{ color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', fontFamily: 'slick' ,padding:'30px'}}>Collections</h1>
+
+                    </div>
                 </div>
             </div>
 
             <div className="container">
                 <div className="row">
-                    <h1 style={{color:'white',display:'flex',justifyContent:'center',alignItems:'center',fontFamily:'slick' }}>Collections</h1>
                     {dishes.length === 0 ? (
-                        <p style={{color: 'white'}}>No dishes found.</p>
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '300px' }}>
+                            <Preloader />
+                            <h5>products loading</h5>
+                        </div>
                     ) : (
                         dishes.map((dish, index) => (
                             <div key={index} className="col-12 col-lg-3 mb-4">
                                 <div className="card">
-                                    <img
-                                        className="card-img-top"
-                                        src={`${process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL}/images/${dish.image[0]}`}
-                                        alt={dish.dishes}
-                                        onClick={() => handleClick(dish)}
-                                        style={{ cursor: 'pointer', width: '100%', height: '200px', objectFit: 'cover' }}
-                                        onError={handleImageError}
-                                        onMouseOver={(e) => {
-                                            if (dish.image.length > 1) {
-                                                e.target.src = `${backendUrl}/images/${dish.image[1]}`;
-                                            }
-                                        }}
-                                        onMouseOut={(e) => {
-                                            e.target.src = `${backendUrl}/images/${dish.image[0]}`;
-                                        }}
-                                    />
+                                    <div style={{ position: 'relative' }}>
+                                        {loadingImages[index] && <Preloader />}
+                                        <img
+                                            className="card-img-top"
+                                            src={`${backendUrl}/images/${dish.image[0]}`}
+                                            alt={dish.dishes}
+                                            onClick={() => handleClick(dish)}
+                                            onLoad={() => handleImageLoad(index)}
+                                            onError={() => handleImageError(index)}
+                                            style={{ display: loadingImages[index] ? 'none' : 'block', cursor: 'pointer', width: '100%', height: '200px', objectFit: 'cover' }}
+                                            onMouseOver={(e) => {
+                                                if (dish.image.length > 1) {
+                                                    e.target.src = `${backendUrl}/images/${dish.image[1]}`;
+                                                }
+                                            }}
+                                            onMouseOut={(e) => {
+                                                e.target.src = `${backendUrl}/images/${dish.image[0]}`;
+                                            }}
+                                        />
+                                    </div>
                                     <div className="card-body">
                                         <h5 className="card-title" style={{ color: 'brown' }}>{dish.dishes}</h5>
                                         <p className="card-text" style={{ color: 'brown' }}><b>AED {dish.price}</b></p>
-                                        <button className='btn btn-primary' style={{backgroundColor:'#a8741a', border:'none'}} onClick={() => redirectToWhatsApp(dish)}>Buy now</button>
+                                        <button className='custom-btn' style={{ backgroundColor: '#a8741a', border: 'none',color:'white' }} onClick={() => redirectToWhatsApp(dish)}><b>Buy now</b></button>
                                     </div>
                                 </div>
                             </div>
@@ -111,6 +128,135 @@ function Products() {
 }
 
 export default Products;
+
+
+
+
+
+// //PRODUCTS by addin try camere
+// import React, { useEffect, useState } from 'react';
+// import axios from 'axios';
+// import { useNavigate } from 'react-router-dom';
+// import TryItOnModal from './Try';
+
+// function Products() {
+//     const backendUrl = process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL;
+//     const [dishes, setDishes] = useState([]);
+//     const [search, setSearch] = useState('');
+//     const [categories, setCategories] = useState([]);
+//     const [showModal, setShowModal] = useState(false);
+//     const [selectedProduct, setSelectedProduct] = useState(null);
+
+//     const navigate = useNavigate();
+
+//     const handleClick = (item) => {
+//         navigate('/view-details', { state: { item } });
+//     };
+
+//     const handleTryItOn = (product) => {
+//         setSelectedProduct(product);
+//         setShowModal(true);
+//     };
+
+//     useEffect(() => {
+//         const fetchDishes = async () => {
+//             try {
+//                 const response = await axios.get(`${backendUrl}/admin/getdishes`, { params: { search } });
+//                 const data = response.data;
+//                 setDishes(data);
+//             } catch (error) {
+//                 console.error('Error fetching dishes:', error);
+//             }
+//         };
+
+//         const fetchCategories = async () => {
+//             try {
+//                 const response = await axios.get(`${backendUrl}/admin/getcategories`);
+//                 const data = response.data;
+//                 setCategories(data);
+//             } catch (err) {
+//                 console.error('Error fetching categories:', err);
+//             }
+//         };
+
+//         fetchCategories();
+//         fetchDishes();
+//     }, [search, backendUrl]);
+
+//     const redirectToWhatsApp = (order) => {
+//         const phoneNumber = '+971585023411';
+//         const imageUrl = `${process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL}/images/${order.image[0]}`;
+//         const message = `Hi, I'd like to order ${order.dishes} for AED ${order.price}.`;
+//         const encodedMessage = encodeURIComponent(message);
+//         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+//         window.open(whatsappUrl, '_blank');
+//     };
+
+//     const handleImageError = (e) => {
+//         e.target.onerror = null; // Prevents infinite loop
+//         e.target.src = 'path/to/default-image.jpg'; // Ensure this path is correct
+//     };
+
+//     return (
+//         <div className='bg-dark'>
+//             <div className="container-fluid banner-2">
+//                 <div className="row">
+//                     <div className="col-12"></div>
+//                 </div>
+//             </div>
+
+//             <div className="container">
+//                 <div className="row">
+//                     <h1 style={{ color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', fontFamily: 'slick' }}>Collections</h1>
+//                     {dishes.length === 0 ? (
+//                         <p style={{ color: 'white' }}>No dishes found.</p>
+//                     ) : (
+//                         dishes.map((dish, index) => (
+//                             <div key={index} className="col-12 col-lg-3 mb-4">
+//                                 <div className="card">
+//                                     <img
+//                                         className="card-img-top"
+//                                         src={`${process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL}/images/${dish.image[0]}`}
+//                                         alt={dish.dishes}
+//                                         onClick={() => handleClick(dish)}
+//                                         style={{ cursor: 'pointer', width: '100%', height: '200px', objectFit: 'cover' }}
+//                                         onError={handleImageError}
+//                                         onMouseOver={(e) => {
+//                                             if (dish.image.length > 1) {
+//                                                 e.target.src = `${backendUrl}/images/${dish.image[1]}`;
+//                                             }
+//                                         }}
+//                                         onMouseOut={(e) => {
+//                                             e.target.src = `${backendUrl}/images/${dish.image[0]}`;
+//                                         }}
+//                                     />
+//                                     <div className="card-body">
+//                                         <h5 className="card-title" style={{ color: 'brown' }}>{dish.dishes}</h5>
+//                                         <p className="card-text" style={{ color: 'brown' }}><b>AED {dish.price}</b></p>
+//                                         <button className='btn btn-primary' style={{ backgroundColor: '#a8741a', border: 'none' }} onClick={() => redirectToWhatsApp(dish)}>Buy now</button>
+//                                         <button className='btn btn-secondary mt-2' onClick={() => handleTryItOn(dish)}>Try It On</button>
+//                                     </div>
+//                                 </div>
+//                             </div>
+//                         ))
+//                     )}
+//                 </div>
+//             </div>
+
+//             {selectedProduct && (
+//                 <TryItOnModal
+//                     show={showModal}
+//                     handleClose={() => setShowModal(false)}
+//                     product={selectedProduct}
+//                 />
+//             )}
+//         </div>
+//     );
+// }
+
+// export default Products;
+
+
 
 
 
